@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="info.js"></script>
+    <title>Chatroom</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <center>
+        <div class="titleBackground">
+            <h1> Chat Room </h1>
+        </div>
+        <p></p>
+        <div id="chat">
+        </div>
+        <p></p>
+
+        <input id="userMessage" type="text" value="" placeholder="Message...">
+        <button id="sendMessage" type="button" onclick="emitMsg(); document.getElementById('userMessage').value = ' '">SEND</button>
+    </center>
+
+    <div id="userList">
+        <h4 id="usersTitle">Users List: </h4>
+        <ul id="usersConnected">
+        </ul>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+
+        socket.emit('newuser', `${name}`);
+
+        socket.on('showUserList', function(userNames) {
+            document.getElementById('usersConnected').innerHTML = ' ';
+
+            for (var i = 0; i < userNames.length; i++) {
+                if (i % 2 != 0) {
+                    var node = document.createElement("LI");
+                    var textnode = document.createTextNode(`${userNames[i]}`);
+
+                    node.appendChild(textnode);
+                    document.getElementById("usersConnected").appendChild(node);  
+                }
+            }
+        });
+
+        socket.on('disconnect', function(user) {
+            socket.emit('removeuser', `${name}`)
+        });
+
+        function emitMsg() {
+            socket.emit('requestMsg', [`${name}`, document.getElementById('userMessage').value]);
+        }
+        
+        socket.on('sendMessage', function(dataInfo) {
+            addMessage(dataInfo[0], dataInfo[1]);
+        });
+
+        socket.on('chatLog', function(allMessages) {
+            var j = 1;
+            var i = 0;
+            for(var msg in allMessages) {
+                if(typeof allMessages[i] === "undefined" || typeof allMessages[j] === "undefined") {
+                    i += 2;
+                    j += 2;
+                    continue;
+                }
+                addMessage(allMessages[i],allMessages[j]);
+                i += 2;
+                j += 2;
+            }
+
+        });
+
+    </script>
+</body>
+</html>
