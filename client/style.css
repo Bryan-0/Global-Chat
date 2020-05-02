@@ -1,0 +1,53 @@
+.titleBackground {
+    background-color: grey;
+}
+
+#chat {
+    background-color: grey;
+    height: 500px;
+    width: 800px;
+    text-align: left;
+    font-size: 24px;
+    font-family: sans-serif;
+    overflow-y: auto;
+    overflow-x:hidden;
+}
+
+#userName {
+    font-size: 18px;
+    height: 18px;
+    font-family: sans-serif;
+}
+
+#enterButton {
+    border-radius: 20px;
+    font-size: 18px;
+    font-family: sans-serif;
+}
+
+#userMessage {
+    width: 690px;
+    height: 24px;
+    font-size: 24px;
+    font-family: sans-serif;
+}
+
+#sendMessage {
+    border-radius: 20px;
+    width: 100px;
+    height: 24px;
+}
+
+#userList {
+    margin-top: -500px;
+    margin-left: 25px;
+    font-size: 19px;
+    overflow-y: auto;
+    height: 400px;
+    width: 200px;
+    background-color: grey;
+}
+
+#usersTitle {
+    text-align: center;
+}
