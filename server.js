@@ -26,16 +26,17 @@ var storedMsg = []; // store messages sent by the user
 
 io.on('connection', (socket) => {
     userCounter += 1;
-    console.log("User entered.");
 
     // show all previous messages to new connections
     socket.emit('chatLog', storedMsg);
 
+    // show all previous users connected to new connections
+    socket.emit('userList', userList);
+
     socket.on('newuser', function(userName) {
         userList.push(socket.id);
         userList.push(userName);
-        io.emit('showUserList', userList);
-        console.log(userList);
+        io.emit('addToUserList', userName, socket.id);
     });
 
     socket.on('requestMsg', function(dataInfo) {
@@ -48,13 +49,11 @@ io.on('connection', (socket) => {
         const index = userList.indexOf(socket.id);
         userList.splice(index + 1, 1);
         removeItem(userList, socket.id);
-        io.emit('showUserList', userList);
-        console.log(userList);
-        console.log("User left.");
+        io.emit('removeUserList', socket.id);
         userCounter -= 1;
     });
 });
 
 http.listen(port, () => {
-    console.log('listening on *: ' + port);
+    console.log('Listening on *: ' + port);
 });
