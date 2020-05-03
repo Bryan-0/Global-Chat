@@ -28,18 +28,34 @@
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
         var socket = io();
 
         socket.emit('newuser', `${name}`);
 
-        socket.on('showUserList', function(userNames) {
-            document.getElementById('usersConnected').innerHTML = ' ';
+        socket.on('addToUserList', function(userName, myid) {
+            //document.getElementById('usersConnected').innerHTML = ' ';
+            var node = document.createElement("LI");
+            var textnode = document.createTextNode(`${userName}`);
+            node.setAttribute("id", `${myid}`);
 
+            node.appendChild(textnode);
+            document.getElementById("usersConnected").appendChild(node);  
+        });
+
+        socket.on('removeUserList', function(id) {
+            console.log(String(id));
+            document.getElementById(String(id)).remove();
+        });
+
+        socket.on('userList', function(userNames) {
             for (var i = 0; i < userNames.length; i++) {
                 if (i % 2 != 0) {
                     var node = document.createElement("LI");
                     var textnode = document.createTextNode(`${userNames[i]}`);
+
+                    node.setAttribute("id", `${userNames[i - 1]}`);
 
                     node.appendChild(textnode);
                     document.getElementById("usersConnected").appendChild(node);  
@@ -75,6 +91,16 @@
 
         });
 
+    </script>
+
+    <script>
+    var input = document.getElementById("userMessage");
+    input.addEventListener("keyup", function(event) {
+      if (event.keyCode === 13) {
+       event.preventDefault();
+       document.getElementById("sendMessage").click();
+      }
+    });
     </script>
 </body>
 </html>
